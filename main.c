@@ -119,13 +119,28 @@ void timerHandler() {
         TIMER0_ICR_R |= 1;
     }
 }
+
+/**
+ * Play a tone based off the character c. Must be between '1'-'8'.
+ */
+void playTone(char c) {
+    if ('1' <= c && c <= '8') {
+        PWM0_1_LOAD_R = 65000 - 5000 * (c - '1');
+        PWM0_1_CMPA_R = PWM0_1_LOAD_R / 2;
+        delay_ms(1000);
+    } else {
+        PWM0_1_CMPA_R = 0;
+    }
+}
+
 /**
  * main.c
  */
 int main(void)
 {
-    SYSCTL_RCGCGPIO_R |= (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5);  // Enable clock for Port C-F
+    SYSCTL_RCGCGPIO_R |= (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5);  // Enable clock for Port B-F
     SYSCTL_RCGCTIMER_R |= 0x1;  // Enable clock for timer 0
+    SYSCTL_RCGCPWM_R |= 0x1;    // Enable clock for PWM0
 
     TIMER0_CTL_R &= ~0x1;      // Disable timer 0
     TIMER0_CFG_R = 0x4;        // Select 16-bit timer
@@ -135,6 +150,11 @@ int main(void)
     TIMER0_IMR_R |= 0x1;       // Unmask timer A
     TIMER0_CTL_R = 0x1;        // Enable timer 0
     NVIC_EN0_R |= (1 << 19);   // Enable time 0 interrupt
+
+    GPIO_PORTB_DIR_R |= (1 << 4);     // Output for PB4
+    GPIO_PORTB_AFSEL_R |= (1 << 4);   // Alternate function for PB4
+    GPIO_PORTB_PCTL_R |= (4 << 16);   // Configure PB4 as M0PWM2
+    GPIO_PORTB_DEN_R |= (1 << 4);     // Enable digital output for PB4
 
     GPIO_PORTC_DIR_R = 0xF0;      // Output for pins 4-7
     GPIO_PORTC_DEN_R = 0xF0;      // Digital enable for pins 4-7
@@ -157,7 +177,14 @@ int main(void)
     GPIO_PORTF_DEN_R = 0x02;      // Digital enable for pin 1
     GPIO_PORTF_PDR_R = 0x02;      // Enable PDR for pin 1
 
-    delay_ms(20);
+    PWM0_1_CTL_R &= ~(0x1);          // Disable while configuring
+    PWM0_1_CTL_R &= ~(1 << 1);       // Count down mode
+    PWM0_1_GENA_R |= (0x2 << 0);     // Go low when 0
+    PWM0_1_GENA_R |= (0x3 << 6);     // Go high when CMPA
+    PWM0_1_CTL_R |= 0x1;             // Enable
+    PWM0_ENABLE_R = (1 << 2);       // Enable PWM0
+
+    delay_ms(50);
     WriteToIR(0x02);    // 4-bit mode
     WriteToIR(0x28);    // 4-bit mode, 2 lines, 5x8 dots per character
     WriteToIR(0x1);     // Clear screen
@@ -176,8 +203,11 @@ int main(void)
         if (!checkKeys) continue;
         checkKeys = false;
         char key = getKey(keys, pressed);
-        if (key == ' ') continue;
-        WriteToDR(key);
+        if (key != ' ') {
+            WriteToIR(0x1);
+            WriteToDR(key);
+        }
+        playTone(key);
     }
 
 	return 0;
