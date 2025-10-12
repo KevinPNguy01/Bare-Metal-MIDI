@@ -42,3 +42,34 @@ void timer0B_handler() {
 
     poll_keypad_handler();
 }
+
+void timer1_init() {
+    // 1. Enable Timer1 clock
+    SYSCTL_RCGCTIMER_R |= (1 << 1);        // Timer1
+    while (!(SYSCTL_PRTIMER_R & (1 << 1))); // Wait for clock
+
+    // 2. Disable timer during configuration
+    TIMER1_CTL_R &= ~0x1;
+
+    // 3. Configure as 16-bit timer
+    TIMER1_CFG_R = 0x4;     // 16-bit mode
+    TIMER1_TAMR_R = 0x2;    // Periodic timer mode
+
+    // 4. Set interval for 125 us
+    // 16 MHz clock -> 1 tick = 62.5 ns -> 125us / 62.5ns = 2000 ticks
+    TIMER1_TAILR_R = 2000 - 1;
+
+    // 5. Clear timeout flag
+    TIMER1_ICR_R = 0x1;
+
+    // 6. Enable timer and interrupt (optional)
+    TIMER1_IMR_R |= 0x1;         // Enable timeout interrupt
+    NVIC_EN0_R |= (1 << 21);     // Enable Timer1A IRQ in NVIC (IRQ 21)
+    TIMER1_CTL_R |= 0x1;         // Start timer
+}
+
+void timer1A_handler() {
+    TIMER1_ICR_R = 0x1; // Clear interrupt
+
+    midi_sample_note();
+}

@@ -58,6 +58,8 @@ extern uint32_t __STACK_TOP;
 extern void timer0A_handler(void);
 extern void timer0B_handler(void);
 
+extern void timer1A_handler(void);
+
 //*****************************************************************************
 //
 // The vector table.  Note that the proper constructs must be placed on this to
@@ -106,7 +108,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // Watchdog timer
     timer0A_handler,                        // Timer 0 subtimer A
     timer0B_handler,                        // Timer 0 subtimer B
-    IntDefaultHandler,                      // Timer 1 subtimer A
+    timer1A_handler,                        // Timer 1 subtimer A
     IntDefaultHandler,                      // Timer 1 subtimer B
     IntDefaultHandler,                      // Timer 2 subtimer A
     IntDefaultHandler,                      // Timer 2 subtimer B

@@ -30,7 +30,7 @@ void speaker_init(void) {
     PWM0_ENABLE_R |= (1 << 2);      // Enable M0PWM2 output (PB4)
 }
 
-void speaker_play_note(uint8_t note, uint32_t duration_ms) {
+void speaker_play_note(uint8_t note) {
     if (note < 21 || note > 108) { // piano key range
         PWM0_1_CMPA_R = 0; // silence
         return;
@@ -40,8 +40,4 @@ void speaker_play_note(uint8_t note, uint32_t duration_ms) {
     uint32_t load = (uint32_t)(2000000.0 / freq) - 1; // assuming 16 MHz
     PWM0_1_LOAD_R = load;
     PWM0_1_CMPA_R = load / 2; // 50% duty for square wave
-
-    delay_ms(duration_ms);
-
-    PWM0_1_CMPA_R = 0; // stop tone
 }
