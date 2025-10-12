@@ -20,8 +20,8 @@ int main(void)
     while (1) {
         if (pressed_key != ' ') {
             lcd_write_instruction(0x1);
-            lcd_write_data(pressed_key);
-            speaker_play_tone(pressed_key);
+            lcd_write_data((pressed_key - '1') + '1');
+            speaker_play_note(21 + (pressed_key - '1'), 1000);
         }
     }
 

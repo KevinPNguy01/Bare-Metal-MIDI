@@ -12,8 +12,9 @@
 #include "delays.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
 
 void speaker_init(void);
-void speaker_play_tone(char c);
+void speaker_play_note(uint8_t note, uint32_t duration_ms);
 
 #endif /* INC_SPEAKER_H_ */

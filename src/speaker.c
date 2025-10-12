@@ -9,30 +9,39 @@
 
 void speaker_init(void) {
     SYSCTL_RCGCGPIO_R |= (1 << 1);  // Enable clock for Port B
-    SYSCTL_RCGCPWM_R |= 0x1;        // Enable clock for PWM0
+    SYSCTL_RCGCPWM_R  |= (1 << 0);  // Enable clock for PWM0
+    SYSCTL_RCC_R |= (1 << 20);      // USEPWMDIV = 1
+    SYSCTL_RCC_R = (SYSCTL_RCC_R & ~0x000E0000) | (0x2 << 17); // Divide by 8
 
-    GPIO_PORTB_DIR_R |= (1 << 4);   // Output for PB4
-    GPIO_PORTB_AFSEL_R |= (1 << 4); // Alternate function for PB4
-    GPIO_PORTB_PCTL_R |= (4 << 16); // Configure PB4 as M0PWM2
-    GPIO_PORTB_DEN_R |= (1 << 4);   // Enable digital output for PB4
+    while(!(SYSCTL_PRGPIO_R & (1 << 1))); // Wait for GPIOB ready
 
-    PWM0_1_CTL_R &= ~(0x1);         // Disable while configuring
-    PWM0_1_CTL_R &= ~(1 << 1);      // Count down mode
-    PWM0_1_GENA_R |= (0x2 << 0);    // Go low when 0
-    PWM0_1_GENA_R |= (0x3 << 6);    // Go high when CMPA
-    PWM0_1_CTL_R |= 0x1;            // Enable PWM0
-    PWM0_ENABLE_R = (1 << 2);       // Enable PWM0M2
+    // --- Configure PB4 for M0PWM2 ---
+    GPIO_PORTB_AFSEL_R |= (1 << 4);
+    GPIO_PORTB_PCTL_R  = (GPIO_PORTB_PCTL_R & ~0x000F0000) | (0x4 << 16);
+    GPIO_PORTB_DEN_R  |= (1 << 4);
+    GPIO_PORTB_DIR_R  |= (1 << 4);
+
+    // --- Configure PWM0, Generator 1 (controls PWM2 & PWM3) ---
+    PWM0_1_CTL_R = 0;               // Disable generator during setup
+    PWM0_1_GENA_R = (0x3 << 2) | (0x2 << 6); // Set when CMPA down, clear at LOAD
+    PWM0_1_LOAD_R = 0xFFFF;         // Default period (safe)
+    PWM0_1_CMPA_R = 0;              // Start silent
+    PWM0_1_CTL_R |= 1;              // Enable generator
+    PWM0_ENABLE_R |= (1 << 2);      // Enable M0PWM2 output (PB4)
 }
 
-/**
- * Play a tone based off the character c. Must be between '1'-'9'.
- */
-void speaker_play_tone(char c) {
-    if ('1' <= c && c <= '9') {
-        PWM0_1_LOAD_R = 65000 - 5000 * (c - '1');
-        PWM0_1_CMPA_R = PWM0_1_LOAD_R / 2;
-        delay_ms(1000);
-    } else {
-        PWM0_1_CMPA_R = 0;
+void speaker_play_note(uint8_t note, uint32_t duration_ms) {
+    if (note < 21 || note > 108) { // piano key range
+        PWM0_1_CMPA_R = 0; // silence
+        return;
     }
+
+    double freq = 440.0 * pow(2.0, (note - 69) / 12.0);
+    uint32_t load = (uint32_t)(2000000.0 / freq) - 1; // assuming 16 MHz
+    PWM0_1_LOAD_R = load;
+    PWM0_1_CMPA_R = load / 2; // 50% duty for square wave
+
+    delay_ms(duration_ms);
+
+    PWM0_1_CMPA_R = 0; // stop tone
 }
