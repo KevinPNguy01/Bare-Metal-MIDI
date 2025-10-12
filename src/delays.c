@@ -11,7 +11,7 @@
 volatile bool delayFinished = false;
 
 // Raise flag indicating delay timer is finished
-void delayFinishedHandler() {
+void delay_finished_handler() {
     delayFinished = true;
 }
 

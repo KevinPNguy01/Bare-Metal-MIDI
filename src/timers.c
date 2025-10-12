@@ -7,9 +7,6 @@
 
 #include "timers.h"
 
-// Flag indicating to poll the keypad
-volatile bool checkKeys = false;
-
 /**
  * Init Timer0A in one-shot mode for arbitrary delays
  * Init Timer0B in periodic mode for keypad polling
@@ -37,10 +34,11 @@ void timer0_init(void) {
 void timer0A_handler(void) {
     TIMER0_ICR_R = 0x1; // Clear interrupt
 
-    delayFinishedHandler();
+    delay_finished_handler();
 }
 
 void timer0B_handler() {
-    checkKeys = true;
     TIMER0_ICR_R |= (1 << 8);
+
+    poll_keypad_handler();
 }

@@ -1,0 +1,83 @@
+/*
+ * keypad.c
+ *
+ *  Created on: Oct 12, 2025
+ *      Author: kevin
+ */
+
+#include "keypad.h"
+
+// The last key pressed. Space if no key was pressed.
+char pressed_key = ' ';
+
+// Keypad button to character mapping
+const char keys[4][4] = {
+     {'1', '2', '3', 'A'},
+     {'4', '5', '6', 'B'},
+     {'7', '8', '9', 'C'},
+     {'*', '0', '#', 'D'}
+};
+
+/**
+ * Matrix for storing keypad state
+ * -1: is not pressed
+ * 0: maybe pressed
+ * 1: is pressed
+ */
+int pressed[4][4] = {
+     {-1, -1, -1, -1},
+     {-1, -1, -1, -1},
+     {-1, -1, -1, -1},
+     {-1, -1, -1, -1},
+};
+
+/**
+ * Init the GPIO pins used for keypad scanning
+ * GPIO D0-D3 for row output
+ * GPIO E1-E3, F1 for column input
+ */
+void keypad_init(void) {
+    SYSCTL_RCGCGPIO_R |= (7 << 3);  // Enable clock for Port D-F
+
+    GPIO_PORTD_LOCK_R = 0x4C4F434B; // Unlock PD7
+    GPIO_PORTD_CR_R |= (1 << 7);    // Allow changes to PD7
+
+    GPIO_PORTD_DIR_R |= 0x0F;       // Output for pins 0-3
+    GPIO_PORTD_DEN_R |= 0x0F;       // Digital enable for pins 0-3
+
+    GPIO_PORTE_DIR_R &= ~0x0E;      // Input for pins 1-3
+    GPIO_PORTE_DEN_R = 0x0E;        // Digital enable for pins 1-3
+    GPIO_PORTE_PDR_R = 0x0E;        // Enable PDR for pins 1-3
+
+    GPIO_PORTF_DIR_R &= ~0x02;      // Input for pin 1
+    GPIO_PORTF_DEN_R = 0x02;        // Digital enable for pin 1
+    GPIO_PORTF_PDR_R = 0x02;        // Enable PDR for pin 1
+}
+
+/**
+ * Detects if a key was just pressed and stores it.
+ * A key was just pressed if it transition from 0 to 1 state.
+ */
+void poll_keypad_handler(void) {
+    pressed_key = ' ';
+    int y, x;
+    for (y = 0; y < 4; ++y) {
+        GPIO_PORTD_DATA_R = (1 << y);
+        for (x = 0; x < 4; ++x) {
+            int state = pressed[y][x];
+            uint32_t bit = x < 3 ? GPIO_PORTE_DATA_R & (1 << (x + 1)) : GPIO_PORTF_DATA_R & 0x02;
+            if (bit) {
+                if (state <= 0) {
+                    if (state == 0) {
+                        pressed_key = keys[y][x];
+                    }
+                    ++pressed[y][x];
+                }
+            } else {
+                if (state >= 0) {
+                    --pressed[y][x];
+                }
+            }
+        }
+    }
+}

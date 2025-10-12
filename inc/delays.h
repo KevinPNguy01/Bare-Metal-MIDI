@@ -17,6 +17,6 @@ extern volatile bool delayFinished;
 void delay(uint32_t us);
 void delay_us(uint32_t us);
 void delay_ms(uint32_t ms);
-void delayFinishedHandler();
+void delay_finished_handler();
 
 #endif /* INC_DELAYS_H_ */

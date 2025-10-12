@@ -10,6 +10,7 @@
 
 #include "tm4c123gh6pm.h"
 #include "delays.h"
+#include "keypad.h"
 #include <stdint.h>
 #include <stdbool.h>
 
