@@ -1,5 +1,6 @@
 #include "tm4c123gh6pm.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 /**
  * Delay in microseconds
@@ -105,11 +106,35 @@ char getKey(const char keys[4][4], int pressed[4][4]) {
 }
 
 /**
+ * Flag determining whether to check the keypad or not
+ */
+volatile bool checkKeys = false;
+
+/**
+ * Raises a flag to check the keypad periodically
+ */
+void timerHandler() {
+    if (TIMER0_RIS_R & 0x1) {
+        checkKeys = true;
+        TIMER0_ICR_R |= 1;
+    }
+}
+/**
  * main.c
  */
 int main(void)
 {
     SYSCTL_RCGCGPIO_R |= (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5);  // Enable clock for Port C-F
+    SYSCTL_RCGCTIMER_R |= 0x1;  // Enable clock for timer 0
+
+    TIMER0_CTL_R &= ~0x1;      // Disable timer 0
+    TIMER0_CFG_R = 0x4;        // Select 16-bit timer
+    TIMER0_TAMR_R = 0x2;       // Periodic timer
+    TIMER0_TAPR_R = 5;         // Prescalar
+    TIMER0_TAILR_R = 65306;    // Initcount
+    TIMER0_IMR_R |= 0x1;       // Unmask timer A
+    TIMER0_CTL_R = 0x1;        // Enable timer 0
+    NVIC_EN0_R |= (1 << 19);   // Enable time 0 interrupt
 
     GPIO_PORTC_DIR_R = 0xF0;      // Output for pins 4-7
     GPIO_PORTC_DEN_R = 0xF0;      // Digital enable for pins 4-7
@@ -137,18 +162,6 @@ int main(void)
     WriteToIR(0x28);    // 4-bit mode, 2 lines, 5x8 dots per character
     WriteToIR(0x1);     // Clear screen
 
-    WriteToDR('H');
-    WriteToDR('e');
-    WriteToDR('l');
-    WriteToDR('l');
-    WriteToDR('o');
-    WriteToDR(' ');
-    WriteToDR('W');
-    WriteToDR('o');
-    WriteToDR('r');
-    WriteToDR('l');
-    WriteToDR('d');
-
     // Keys on keypad
     const char keys[4][4] = {
          {'1', '2', '3', 'A'},
@@ -160,9 +173,10 @@ int main(void)
     int pressed[4][4] = {-1};
 
     while (1) {
+        if (!checkKeys) continue;
+        checkKeys = false;
         char key = getKey(keys, pressed);
         if (key == ' ') continue;
-        WriteToIR(0x1);
         WriteToDR(key);
     }
 
