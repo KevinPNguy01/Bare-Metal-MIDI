@@ -1,36 +1,31 @@
 #include "tm4c123gh6pm.h"
+#include "timers.h"
 #include <stdint.h>
 #include <stdbool.h>
 
-/**
- * Delay in microseconds
- */
-void delay_us(uint32_t us) {
-    NVIC_ST_RELOAD_R = 16 - 1;   // 1 µs @ 16 MHz
-    NVIC_ST_CURRENT_R = 0;       // Clear current count
-    NVIC_ST_CTRL_R = 0x05;       // Enable SysTick, use system clock
+// Delay function (variable microseconds)
+void delay(uint32_t us) {
+    delayDone = false;
 
-    uint32_t i;
-    for (i = 0; i < us; i++) {
-        while ((NVIC_ST_CTRL_R & 0x10000) == 0) {}  // Wait for count flag
-    }
+    // Assuming system clock is 16 MHz
+    uint32_t ticks = (16 * us) - 1;
+    TIMER0_TAILR_R = ticks & 0xFFFF;  // Load 16-bit timer
+    TIMER0_CTL_R |= 0x1;              // Start timer
 
-    NVIC_ST_CTRL_R = 0;          // Disable SysTick
+    // Wait for completion
+    while(!delayDone);
 }
 
-/**
- * Delay in milliseconds
- */
-void delay_ms(uint32_t ms) {
-    NVIC_ST_RELOAD_R = 16000 - 1;   // 1 ms @ 16 MHz
-    NVIC_ST_CURRENT_R = 0;          // Clear current
-    NVIC_ST_CTRL_R = 0x05;          // Enable, use system clock
-
-    uint32_t i;
-    for (i = 0; i < ms; i++) {
-        while ((NVIC_ST_CTRL_R & 0x10000) == 0) {}  // Wait for count flag
+void delay_us(uint32_t us) {
+    while (us >= 4000) {
+        delay(4000);
+        us -= 4000;
     }
-    NVIC_ST_CTRL_R = 0;             // Disable
+    if (us) delay(us);
+}
+
+void delay_ms(uint32_t ms) {
+    delay_us(ms * 1000);
 }
 
 /**
@@ -106,21 +101,6 @@ char getKey(const char keys[4][4], int pressed[4][4]) {
 }
 
 /**
- * Flag determining whether to check the keypad or not
- */
-volatile bool checkKeys = false;
-
-/**
- * Raises a flag to check the keypad periodically
- */
-void timerHandler() {
-    if (TIMER0_RIS_R & 0x1) {
-        checkKeys = true;
-        TIMER0_ICR_R |= 1;
-    }
-}
-
-/**
  * Play a tone based off the character c. Must be between '1'-'8'.
  */
 void playTone(char c) {
@@ -138,18 +118,10 @@ void playTone(char c) {
  */
 int main(void)
 {
-    SYSCTL_RCGCGPIO_R |= (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5);  // Enable clock for Port B-F
-    SYSCTL_RCGCTIMER_R |= 0x1;  // Enable clock for timer 0
-    SYSCTL_RCGCPWM_R |= 0x1;    // Enable clock for PWM0
+    Timer0_Init();
 
-    TIMER0_CTL_R &= ~0x1;      // Disable timer 0
-    TIMER0_CFG_R = 0x4;        // Select 16-bit timer
-    TIMER0_TAMR_R = 0x2;       // Periodic timer
-    TIMER0_TAPR_R = 5;         // Prescalar
-    TIMER0_TAILR_R = 65306;    // Initcount
-    TIMER0_IMR_R |= 0x1;       // Unmask timer A
-    TIMER0_CTL_R = 0x1;        // Enable timer 0
-    NVIC_EN0_R |= (1 << 19);   // Enable time 0 interrupt
+    SYSCTL_RCGCGPIO_R |= (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5);  // Enable clock for Port B-F
+    SYSCTL_RCGCPWM_R |= 0x1;    // Enable clock for PWM0
 
     GPIO_PORTB_DIR_R |= (1 << 4);     // Output for PB4
     GPIO_PORTB_AFSEL_R |= (1 << 4);   // Alternate function for PB4
@@ -169,11 +141,11 @@ int main(void)
     GPIO_PORTE_AFSEL_R &= ~(0x0E);  // Clear alternate function bits for pins 1-3
     GPIO_PORTE_PCTL_R &= ~(0xFFF0); // Clear PCTL bits for pins 1-3
 
-    GPIO_PORTE_DIR_R = ~0x0E;     // Input for pins 1-3
+    GPIO_PORTE_DIR_R &= ~0x0E;    // Input for pins 1-3
     GPIO_PORTE_DEN_R = 0x0E;      // Digital enable for pins 1-3
     GPIO_PORTE_PDR_R = 0x0E;      // Enable PDR for pins 1-3
 
-    GPIO_PORTF_DIR_R = ~0x02;     // Input for pin 1
+    GPIO_PORTF_DIR_R &= ~0x02;    // Input for pin 1
     GPIO_PORTF_DEN_R = 0x02;      // Digital enable for pin 1
     GPIO_PORTF_PDR_R = 0x02;      // Enable PDR for pin 1
 
