@@ -1,32 +1,8 @@
 #include "tm4c123gh6pm.h"
 #include "timers.h"
+#include "delays.h"
 #include <stdint.h>
 #include <stdbool.h>
-
-// Delay function (variable microseconds)
-void delay(uint32_t us) {
-    delayDone = false;
-
-    // Assuming system clock is 16 MHz
-    uint32_t ticks = (16 * us) - 1;
-    TIMER0_TAILR_R = ticks & 0xFFFF;  // Load 16-bit timer
-    TIMER0_CTL_R |= 0x1;              // Start timer
-
-    // Wait for completion
-    while(!delayDone);
-}
-
-void delay_us(uint32_t us) {
-    while (us >= 4000) {
-        delay(4000);
-        us -= 4000;
-    }
-    if (us) delay(us);
-}
-
-void delay_ms(uint32_t ms) {
-    delay_us(ms * 1000);
-}
 
 /**
  * Pulses E pin on the LCD to initiate data transfer

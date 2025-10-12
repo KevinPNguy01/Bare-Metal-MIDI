@@ -9,11 +9,11 @@
 #define INC_TIMERS_H_
 
 #include "tm4c123gh6pm.h"
+#include "delays.h"
 #include <stdint.h>
 #include <stdbool.h>
 
 extern volatile bool checkKeys;
-extern volatile bool delayDone;
 
 void Timer0_Init(void);
 void Timer0A_Handler(void);

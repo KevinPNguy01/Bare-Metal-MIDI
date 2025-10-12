@@ -10,9 +10,6 @@
 // Flag indicating to poll the keypad
 volatile bool checkKeys = false;
 
-// Flag indicating delay timer is finished
-volatile bool delayDone = false;
-
 /**
  * Init Timer0A in one-shot mode for arbitrary delays
  * Init Timer0B in periodic mode for keypad polling
@@ -39,7 +36,8 @@ void Timer0_Init(void) {
 
 void Timer0A_Handler(void) {
     TIMER0_ICR_R = 0x1; // Clear interrupt
-    delayDone = true;   // Set flag to indicate timer is done
+
+    delayFinishedHandler();
 }
 
 void Timer0B_Handler() {
