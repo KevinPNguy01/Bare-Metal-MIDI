@@ -14,7 +14,7 @@ volatile bool checkKeys = false;
  * Init Timer0A in one-shot mode for arbitrary delays
  * Init Timer0B in periodic mode for keypad polling
  */
-void Timer0_Init(void) {
+void timer0_init(void) {
     SYSCTL_RCGCTIMER_R |= 0x1;      // Enable Timer0 clock
     while(!(SYSCTL_PRTIMER_R & 0x1));
     TIMER0_CTL_R = 0x0;             // Disable timer during setup
@@ -34,13 +34,13 @@ void Timer0_Init(void) {
     TIMER0_CTL_R |= (1 << 8);       // Start Timer0B
 }
 
-void Timer0A_Handler(void) {
+void timer0A_handler(void) {
     TIMER0_ICR_R = 0x1; // Clear interrupt
 
     delayFinishedHandler();
 }
 
-void Timer0B_Handler() {
+void timer0B_handler() {
     checkKeys = true;
     TIMER0_ICR_R |= (1 << 8);
 }

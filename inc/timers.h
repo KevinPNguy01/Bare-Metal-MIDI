@@ -15,8 +15,8 @@
 
 extern volatile bool checkKeys;
 
-void Timer0_Init(void);
-void Timer0A_Handler(void);
-void Timer0B_Handler();
+void timer0_init(void);
+void timer0A_handler(void);
+void timer0B_handler();
 
 #endif /* INC_TIMERS_H_ */

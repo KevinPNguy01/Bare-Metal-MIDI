@@ -94,7 +94,7 @@ void playTone(char c) {
  */
 int main(void)
 {
-    Timer0_Init();
+    timer0_init();
 
     SYSCTL_RCGCGPIO_R |= (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5);  // Enable clock for Port B-F
     SYSCTL_RCGCPWM_R |= 0x1;    // Enable clock for PWM0
