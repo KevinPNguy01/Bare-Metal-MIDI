@@ -24,6 +24,7 @@ void timer0_init(void) {
 
     // Timer 0B
     TIMER0_TBMR_R = 0x2;            // Periodic mode
+    // TODO: fix prescalar and init count to account for 16MHz -> 80Mhz
     TIMER0_TBPR_R = 5;              // Prescalar
     TIMER0_TBILR_R = 65306;         // Initcount
     NVIC_EN0_R |= (1 << 20);        // Enable Timer0B IRQ in NVIC
@@ -56,8 +57,8 @@ void timer1_init() {
     TIMER1_TAMR_R = 0x2;    // Periodic timer mode
 
     // 4. Set interval for 125 us
-    // 16 MHz clock -> 1 tick = 62.5 ns -> 125us / 62.5ns = 2000 ticks
-    TIMER1_TAILR_R = 2000 - 1;
+    // 80 MHz clock -> 1 tick = 12.5 ns -> 125us / 12.5ns = 10000 ticks
+    TIMER1_TAILR_R = 10000 - 1;
 
     // 5. Clear timeout flag
     TIMER1_ICR_R = 0x1;

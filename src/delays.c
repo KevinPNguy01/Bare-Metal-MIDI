@@ -15,11 +15,11 @@ void delay_finished_handler() {
     delayFinished = true;
 }
 
-// Blocking delay with maximum 4096 microseconds
+// Blocking delay with maximum 819 microseconds
 void delay(uint32_t us) {
     delayFinished = false;
 
-    uint32_t ticks = (16 * us) - 1;   // Convert microseconds to ticks
+    uint32_t ticks = (80 * us) - 1;   // Convert microseconds to ticks
     TIMER0_TAILR_R = ticks & 0xFFFF;  // Load 16-bit timer
     TIMER0_CTL_R |= 0x1;              // Start timer
 
@@ -29,10 +29,10 @@ void delay(uint32_t us) {
 
 // Blocking delay in microseconds
 void delay_us(uint32_t us) {
-    // Split into chunks of 4000 microseconds
-    while (us >= 4000) {
-        delay(4000);
-        us -= 4000;
+    // Split into chunks of 512 microseconds
+    while (us >= 512) {
+        delay(512);
+        us -= 512;
     }
     if (us) delay(us);
 }

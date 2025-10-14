@@ -37,7 +37,7 @@ void speaker_play_note(uint8_t note) {
     }
 
     double freq = 440.0 * pow(2.0, (note - 69) / 12.0);
-    uint32_t load = (uint32_t)(2000000.0 / freq) - 1; // assuming 16 MHz
+    uint32_t load = (uint32_t)(10000000.0 / freq) - 1; // assuming 16 MHz
     PWM0_1_LOAD_R = load;
     PWM0_1_CMPA_R = load / 2; // 50% duty for square wave
 }
