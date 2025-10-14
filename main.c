@@ -52,10 +52,10 @@ int main(void)
     uint16_t prev = 0;
 
     while (1) {
-        if (pressed_key == 'A') {
+        if (pressed_key == '*') {
             midi_init();
         }
-        if (pressed_key == 'B') {
+        if (pressed_key == '#') {
             midi_note_index = NUM_MIDI_NOTES;
             PWM0_1_CMPA_R = 0;
         }
