@@ -10,11 +10,12 @@
 
 #include "tm4c123gh6pm.h"
 #include "delays.h"
+#include "midi.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
 
 void speaker_init(void);
-void speaker_play_note(uint8_t note);
+void speaker_play_notes(void);
 
 #endif /* INC_SPEAKER_H_ */

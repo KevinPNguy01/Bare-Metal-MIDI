@@ -15,7 +15,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-extern uint8_t midi_notes_active;
+#define NUM_NOTES 88
+#define NUM_MIDI_NOTES 1999
+
 extern uint16_t midi_note_index;
 extern uint32_t midi_time;
 
@@ -25,8 +27,14 @@ struct note_message {
     bool on;
 };
 
-extern struct note_message note_messages[26];
+extern struct note_message note_messages[NUM_MIDI_NOTES];
 
-void midi_sample_note();
+extern bool midi_notes[NUM_NOTES];
+extern float midi_notes_phases[NUM_NOTES];
+extern float midi_notes_phases_inc[NUM_NOTES];
+
+void midi_init(void);
+
+void midi_sample_note(void);
 
 #endif /* INC_MIDI_H_ */

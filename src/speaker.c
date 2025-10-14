@@ -24,20 +24,33 @@ void speaker_init(void) {
     // --- Configure PWM0, Generator 1 (controls PWM2 & PWM3) ---
     PWM0_1_CTL_R = 0;               // Disable generator during setup
     PWM0_1_GENA_R = (0x3 << 2) | (0x2 << 6); // Set when CMPA down, clear at LOAD
-    PWM0_1_LOAD_R = 0xFFFF;         // Default period (safe)
+    PWM0_1_LOAD_R = 0xFF;         // Default period (safe)
     PWM0_1_CMPA_R = 0;              // Start silent
     PWM0_1_CTL_R |= 1;              // Enable generator
     PWM0_ENABLE_R |= (1 << 2);      // Enable M0PWM2 output (PB4)
 }
 
-void speaker_play_note(uint8_t note) {
-    if (note < 21 || note > 108) { // piano key range
-        PWM0_1_CMPA_R = 0; // silence
+void speaker_play_notes() {
+    float mixed = 0;
+    uint32_t i;
+    uint32_t num_notes_on = 0;
+    for (i = 0; i < NUM_NOTES; ++i) {
+        if (!midi_notes[i]) continue;
+
+        float phase_inc = midi_notes_phases_inc[i];
+        midi_notes_phases[i] += phase_inc;
+        if (midi_notes_phases[i] >= 1.0f) midi_notes_phases[i] -= 1.0f;
+
+        mixed += (midi_notes_phases[i] < 0.5f) ? 1 : -1; // square wave
+        ++num_notes_on;
+    }
+    if (num_notes_on == 0) {
+        PWM0_1_CMPA_R = 0;
         return;
     }
 
-    double freq = 440.0 * pow(2.0, (note - 69) / 12.0);
-    uint32_t load = (uint32_t)(10000000.0 / freq) - 1; // assuming 16 MHz
-    PWM0_1_LOAD_R = load;
-    PWM0_1_CMPA_R = load / 2; // 50% duty for square wave
+    mixed /= num_notes_on;
+    mixed = (mixed + 1) * 0.5f;
+
+    PWM0_1_CMPA_R = (uint32_t)(mixed * PWM0_1_LOAD_R - 1);
 }
