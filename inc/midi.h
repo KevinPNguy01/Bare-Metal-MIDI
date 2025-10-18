@@ -12,11 +12,11 @@
 #include "delays.h"
 #include "speaker.h"
 #include "lcd.h"
+#include "songs.h"
 #include <stdint.h>
 #include <stdbool.h>
 
 #define NUM_NOTES 88
-#define NUM_MIDI_NOTES 1999
 
 extern uint16_t midi_note_index;
 extern uint32_t midi_time;
@@ -26,8 +26,6 @@ struct note_message {
     uint8_t note;
     bool on;
 };
-
-extern struct note_message note_messages[NUM_MIDI_NOTES];
 
 extern bool midi_notes[NUM_NOTES];
 extern float midi_notes_phases[NUM_NOTES];
