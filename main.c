@@ -52,13 +52,6 @@ int main(void)
     uint16_t prev = 0;
 
     while (1) {
-        if (pressed_key == '*') {
-            midi_init();
-        }
-        if (pressed_key == '#') {
-            midi_note_index = NUM_MIDI_NOTES;
-            PWM0_1_CMPA_R = 0;
-        }
         if (midi_note_index == prev) continue;
         lcd_init();
         prev = midi_note_index;

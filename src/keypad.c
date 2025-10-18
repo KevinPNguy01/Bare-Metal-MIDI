@@ -12,10 +12,10 @@ char pressed_key = ' ';
 
 // Keypad button to character mapping
 const char keys[4][4] = {
-     {'D', '#', '0', '*'},
-     {'C', '9', '8', '7'},
-     {'B', '6', '5', '4'},
-     {'A', '3', '2', '1'}
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
 };
 
 /**
@@ -79,5 +79,12 @@ void poll_keypad_handler(void) {
                 }
             }
         }
+    }
+    if (pressed_key == '*') {
+        midi_init();
+    }
+    if (pressed_key == '#') {
+        midi_note_index = NUM_MIDI_NOTES;
+        PWM0_1_CMPA_R = 0;
     }
 }

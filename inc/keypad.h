@@ -9,6 +9,7 @@
 #define INC_KEYPAD_H_
 
 #include "tm4c123gh6pm.h"
+#include "midi.h"
 #include <stdint.h>
 #include <stdbool.h>
 
