@@ -24,7 +24,7 @@ void speaker_init(void) {
     // --- Configure PWM0, Generator 1 (controls PWM2 & PWM3) ---
     PWM0_1_CTL_R = 0;               // Disable generator during setup
     PWM0_1_GENA_R = (0x3 << 2) | (0x2 << 6); // Set when CMPA down, clear at LOAD
-    PWM0_1_LOAD_R = 0xFF;         // Default period (safe)
+    PWM0_1_LOAD_R = 0x100;          // Default period (safe)
     PWM0_1_CMPA_R = 0;              // Start silent
     PWM0_1_CTL_R |= 1;              // Enable generator
     PWM0_ENABLE_R |= (1 << 2);      // Enable M0PWM2 output (PB4)
@@ -41,7 +41,10 @@ void speaker_play_notes() {
         midi_notes_phases[i] += phase_inc;
         if (midi_notes_phases[i] >= 1.0f) midi_notes_phases[i] -= 1.0f;
 
-        mixed += (midi_notes_phases[i] < 0.5f) ? 1 : -1; // square wave
+        float phase = midi_notes_phases[i];
+        uint16_t sine_index = phase * NUM_SINE_SIMPLES;
+        float amplitude = midi_sine[sine_index];
+        mixed += amplitude;
         ++num_notes_on;
     }
     if (num_notes_on == 0) {

@@ -15,8 +15,10 @@
 #include "songs.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
 
 #define NUM_NOTES 88
+#define NUM_SINE_SIMPLES 256
 
 extern uint16_t midi_note_index;
 extern uint32_t midi_time;
@@ -30,6 +32,7 @@ struct note_message {
 extern bool midi_notes[NUM_NOTES];
 extern float midi_notes_phases[NUM_NOTES];
 extern float midi_notes_phases_inc[NUM_NOTES];
+extern float midi_sine[NUM_SINE_SIMPLES];
 
 void midi_init(void);
 
