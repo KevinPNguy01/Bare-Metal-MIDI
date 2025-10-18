@@ -56,9 +56,9 @@ void timer1_init() {
     TIMER1_CFG_R = 0x4;     // 16-bit mode
     TIMER1_TAMR_R = 0x2;    // Periodic timer mode
 
-    // 4. Set interval for 125 us
-    // 80 MHz clock -> 1 tick = 12.5 ns -> 125us / 12.5ns = 10000 ticks
-    TIMER1_TAILR_R = 10000 - 1;
+    // 4. Set interval for 62.5 us
+    // 80 MHz clock -> 1 tick = 12.5 ns -> 62.5us / 12.5ns = 5000 ticks
+    TIMER1_TAILR_R = 5000 - 1;
 
     // 5. Clear timeout flag
     TIMER1_ICR_R = 0x1;

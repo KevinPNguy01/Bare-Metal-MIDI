@@ -23,7 +23,7 @@ void midi_init(void) {
     for (i = 0; i < NUM_NOTES; ++i) {
         midi_notes[i] = false;
         midi_notes_phases[i] = 0;
-        midi_notes_phases_inc[i] = 440.0 * pow(2.0, (21 + i - 69) / 12.0) / 8000;
+        midi_notes_phases_inc[i] = 440.0 * pow(2.0, (21 + i - 69) / 12.0) / 16000;
     }
 
     for (i = 0; i < NUM_SINE_SIMPLES; ++i) {
@@ -32,7 +32,7 @@ void midi_init(void) {
 }
 
 void midi_sample_note(void) {
-    midi_time += 125;
+    midi_time += 63;
     while (midi_note_index < NUM_MIDI_NOTES && midi_time >= note_messages[midi_note_index].time) {
         struct note_message note = note_messages[midi_note_index];
         if (note.on) {
