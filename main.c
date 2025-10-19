@@ -4,6 +4,7 @@
 #include "keypad.h"
 #include "lcd.h"
 #include "midi.h"
+#include "song.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -49,19 +50,37 @@ int main(void)
 
     timer1_init();
 
-    uint16_t prev = 0;
-
     while (1) {
-        if (midi_note_index == prev) continue;
+        if (current_song == NULL) continue;
         lcd_init();
-        prev = midi_note_index;
         lcd_write_instruction(0x1);
-        uint16_t hundreds = (midi_note_index / 100) % 10;
-        uint16_t tens = (midi_note_index / 10) % 10;
-        uint16_t ones = midi_note_index % 10;
-        lcd_write_data('0' + hundreds);
-        lcd_write_data('0' + tens);
-        lcd_write_data('0' + ones);
+        uint16_t seconds = midi_time / 10 / 1000 / 1000;
+        uint16_t minute = seconds / 60 % 10;
+        uint16_t seconds_tens = seconds / 10 % 6;
+        uint16_t seconds_ones = seconds % 10;
+        lcd_write_data('0' + minute);
+        lcd_write_data(':');
+        lcd_write_data('0' + seconds_tens);
+        lcd_write_data('0' + seconds_ones);
+
+        lcd_write_data(' ');
+        lcd_write_data(' ');
+        lcd_write_data(' ');
+        lcd_write_data(' ');
+        lcd_write_data(' ');
+        lcd_write_data(' ');
+        lcd_write_data(' ');
+        lcd_write_data(' ');
+
+        seconds = current_song->note_messages[current_song->num_notes-1].time / 10 / 1000 / 1000;
+        minute = seconds / 60 % 10;
+        seconds_tens = seconds / 10 % 6;
+        seconds_ones = seconds % 10;
+        lcd_write_data('0' + minute);
+        lcd_write_data(':');
+        lcd_write_data('0' + seconds_tens);
+        lcd_write_data('0' + seconds_ones);
+
         delay_ms(50);
     }
 

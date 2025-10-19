@@ -37,7 +37,7 @@ void lcd_write_instruction(char data) {
 void lcd_write_data(char data) {
     GPIO_PORTD_DATA_R |= 1 << 6;
     send_byte(data);
-    delay_ms(2);
+    delay_us(40);
 }
 
 
