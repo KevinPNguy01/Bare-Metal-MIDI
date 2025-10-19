@@ -16,10 +16,22 @@ void lcd_init() {
     GPIO_PORTD_DIR_R |= 0xCF;       // Output for pins 6-7
     GPIO_PORTD_DEN_R |= 0xCF;       // Digital enable for pins 6-7
 
-    delay_ms(50);
-    lcd_write_instruction(0x02);    // 4-bit mode
-    lcd_write_instruction(0x28);    // 4-bit mode, 2 lines, 5x8 dots per character
-    lcd_write_instruction(0x1);     // Clear screen
+    delay_ms(20);
+
+    send_nibble(0b0011);
+    delay_ms(5);
+    send_nibble(0b0011);
+    delay_us(150);
+    send_nibble(0b0011);
+    delay_us(150);
+    send_nibble(0b0010);
+    delay_us(150);
+
+    lcd_write_instruction(0b00101000);
+    lcd_write_instruction(0b00001000);
+    lcd_write_instruction(0b00000001);
+    lcd_write_instruction(0b00000110);
+    lcd_write_instruction(0b00001111);
 }
 
 /**
@@ -27,6 +39,7 @@ void lcd_init() {
  */
 void lcd_write_instruction(char data) {
     GPIO_PORTD_DATA_R &= ~(1 << 6);
+    delay_us(2);
     send_byte(data);
     delay_ms(2);
 }
@@ -36,8 +49,9 @@ void lcd_write_instruction(char data) {
  */
 void lcd_write_data(char data) {
     GPIO_PORTD_DATA_R |= 1 << 6;
+    delay_us(2);
     send_byte(data);
-    delay_us(40);
+    delay_us(50);
 }
 
 
