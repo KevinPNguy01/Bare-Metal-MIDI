@@ -39,9 +39,9 @@ void lcd_init() {
  */
 void lcd_write_instruction(char data) {
     GPIO_PORTD_DATA_R &= ~(1 << 6);
-    delay_us(2);
+    delay_ns(75);
     send_byte(data);
-    delay_ms(2);
+    delay_us(1750);
 }
 
 /**
@@ -49,9 +49,9 @@ void lcd_write_instruction(char data) {
  */
 void lcd_write_data(char data) {
     GPIO_PORTD_DATA_R |= 1 << 6;
-    delay_us(2);
+    delay_ns(75);
     send_byte(data);
-    delay_us(50);
+    delay_us(40);
 }
 
 
@@ -60,9 +60,9 @@ void lcd_write_data(char data) {
  */
 static void pulse_enable() {
     GPIO_PORTD_DATA_R |= (1 << 7);
-    delay_us(2);
+    delay_us(1);
     GPIO_PORTD_DATA_R &= ~(1 << 7);
-    delay_us(2);
+    delay_us(1);
 }
 
 /**
