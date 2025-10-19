@@ -81,7 +81,7 @@ with open("inc/songs.h", "w") as h_file, open("src/songs.c", "w") as c_file:
             f"const struct note_message song_{index}_note_messages[SONG_{index}_NUM_NOTES] = {{"
         )
         for note, time, on in notes:
-            c_file.write(f"{{0x{time:x},{note},{1 if on else 0}}},")
+            c_file.write(f"{{0x{10 * time:x},{note},{1 if on else 0}}},")
         c_file.write("};\n")
 
     h_file.write("\n")

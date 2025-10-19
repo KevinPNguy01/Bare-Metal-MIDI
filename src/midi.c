@@ -8,7 +8,7 @@
 #include "midi.h"
 
 uint16_t midi_note_index = 0;
-uint32_t midi_time = 0;
+uint32_t midi_time = 0;         // 0.1 microsecond units
 
 bool midi_notes[NUM_NOTES] = {false};
 float midi_notes_phases[NUM_NOTES] = {0};
@@ -37,7 +37,7 @@ void midi_sample_note(void) {
     uint16_t num_notes = current_song->num_notes;
     const struct note_message* note_messages = current_song->note_messages;
 
-    midi_time += 63;
+    midi_time += 625;
     while (midi_note_index < num_notes && midi_time >= note_messages[midi_note_index].time) {
         struct note_message note = note_messages[midi_note_index];
         if (note.on) {
