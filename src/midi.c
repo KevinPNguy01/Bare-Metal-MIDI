@@ -32,7 +32,7 @@ void midi_init(void) {
 }
 
 void midi_sample_note(void) {
-    if (current_song == NULL) return;
+    if (current_song == NULL || midi_note_index >= current_song->num_notes) return;
 
     uint16_t num_notes = current_song->num_notes;
     const struct note_message* note_messages = current_song->note_messages;
