@@ -17,6 +17,10 @@ void lcd_init();
 void lcd_write_instruction(char data);
 void lcd_write_data(char data);
 
+void lcd_clear_screen();
+void lcd_set_cursor_pos(uint8_t x, uint8_t y);
+void lcd_write_str(char str[], uint8_t len);
+
 static void pulse_enable();
 static void send_nibble(char data);
 static void send_byte(char data);

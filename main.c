@@ -52,7 +52,8 @@ int main(void)
 
     while (1) {
         if (current_song == NULL) continue;
-        lcd_write_instruction(0x1);
+        lcd_clear_screen();
+        lcd_set_cursor_pos(0, 1);
         uint16_t seconds = midi_time / 10 / 1000 / 1000;
         uint16_t minute = seconds / 60 % 10;
         uint16_t seconds_tens = seconds / 10 % 6;

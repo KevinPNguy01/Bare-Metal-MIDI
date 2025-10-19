@@ -29,7 +29,7 @@ void lcd_init() {
 
     lcd_write_instruction(0b00101000);
     lcd_write_instruction(0b00001000);
-    lcd_write_instruction(0b00000001);
+    lcd_clear_screen();
     lcd_write_instruction(0b00000110);
     lcd_write_instruction(0b00001111);
 }
@@ -54,6 +54,29 @@ void lcd_write_data(char data) {
     delay_us(40);
 }
 
+/**
+ * Clears the display
+ */
+void lcd_clear_screen() {
+    lcd_write_instruction(0x1);
+    delay_us(1600);
+}
+
+/**
+ * Sets the cursor position to the given column and row
+ */
+void lcd_set_cursor_pos(uint8_t x, uint8_t y) {
+    uint8_t address = x | (y ? (1 << 6) : 0);
+    lcd_write_instruction((1 << 7) | address);
+
+}
+
+void lcd_write_str(char str[], uint8_t len) {
+    uint8_t i;
+    for (i = 0; str[i] != '\0'; ++i) {
+        lcd_write_data(str[i]);
+    }
+}
 
 /**
  * Pulses Enable pin on the LCD to initiate data transfer
