@@ -27,6 +27,18 @@ void delay(uint32_t us) {
     while(!delayFinished);
 }
 
+// Blocking delay in nanoseconds, increments of 25 nanoseconds
+void delay_ns(uint32_t ns) {
+    delayFinished = false;
+
+    uint32_t ticks = (ns * 2 / 25);   // Convert nanoseconds to ticks
+    TIMER0_TAILR_R = ticks & 0xFFFF;  // Load 16-bit timer
+    TIMER0_CTL_R |= 0x1;              // Start timer
+
+    // Wait for completion
+    while(!delayFinished);
+}
+
 // Blocking delay in microseconds
 void delay_us(uint32_t us) {
     // Split into chunks of 512 microseconds
