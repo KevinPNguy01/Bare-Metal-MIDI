@@ -85,6 +85,7 @@ void poll_keypad_handler(void) {
     if ('0' <= pressed_key && pressed_key <= '9') {
         uint8_t index = pressed_key - '0';
         if (index < NUM_SONGS) {
+            lcd_clear_screen();
             current_song = &songs[index];
             midi_init();
         }

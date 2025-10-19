@@ -52,34 +52,35 @@ int main(void)
 
     while (1) {
         if (current_song == NULL) continue;
-        lcd_clear_screen();
-        lcd_set_cursor_pos(0, 1);
+        lcd_set_cursor_pos(0, 0);
+        lcd_write_str(current_song->title);
         uint16_t seconds = midi_time / 10 / 1000 / 1000;
         uint16_t minute = seconds / 60 % 10;
         uint16_t seconds_tens = seconds / 10 % 6;
         uint16_t seconds_ones = seconds % 10;
-        lcd_write_data('0' + minute);
-        lcd_write_data(':');
-        lcd_write_data('0' + seconds_tens);
-        lcd_write_data('0' + seconds_ones);
-
-        lcd_write_data(' ');
-        lcd_write_data(' ');
-        lcd_write_data(' ');
-        lcd_write_data(' ');
-        lcd_write_data(' ');
-        lcd_write_data(' ');
-        lcd_write_data(' ');
-        lcd_write_data(' ');
+        const char time_str[] = {
+            '0' + minute,
+            ':',
+            '0' + seconds_tens,
+            '0' + seconds_ones,
+            '\0'
+        };
+        lcd_set_cursor_pos(1, 1);
+        lcd_write_str(time_str);
 
         seconds = current_song->note_messages[current_song->num_notes-1].time / 10 / 1000 / 1000;
         minute = seconds / 60 % 10;
         seconds_tens = seconds / 10 % 6;
         seconds_ones = seconds % 10;
-        lcd_write_data('0' + minute);
-        lcd_write_data(':');
-        lcd_write_data('0' + seconds_tens);
-        lcd_write_data('0' + seconds_ones);
+        const char duration_str[] = {
+            '0' + minute,
+            ':',
+            '0' + seconds_tens,
+            '0' + seconds_ones,
+            '\0'
+        };
+        lcd_set_cursor_pos(12, 1);
+        lcd_write_str(duration_str);
 
         delay_ms(50);
     }
