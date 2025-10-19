@@ -62,7 +62,7 @@ void poll_keypad_handler(void) {
     pressed_key = ' ';
     int y, x;
     for (y = 0; y < 4; ++y) {
-        GPIO_PORTD_DATA_R = (1 << y);
+        GPIO_PORTD_DATA_R |= (1 << y);
         for (x = 0; x < 4; ++x) {
             int state = pressed[y][x];
             uint32_t bit = x < 3 ? GPIO_PORTE_DATA_R & (1 << (x + 1)) : GPIO_PORTF_DATA_R & 0x02;
@@ -79,6 +79,7 @@ void poll_keypad_handler(void) {
                 }
             }
         }
+        GPIO_PORTD_DATA_R &= ~(1 << y);
     }
 
     if ('0' <= pressed_key && pressed_key <= '9') {
