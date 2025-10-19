@@ -32,8 +32,13 @@ void midi_init(void) {
 }
 
 void midi_sample_note(void) {
+    if (current_song == NULL) return;
+
+    uint16_t num_notes = current_song->num_notes;
+    const struct note_message* note_messages = current_song->note_messages;
+
     midi_time += 63;
-    while (midi_note_index < NUM_MIDI_NOTES && midi_time >= note_messages[midi_note_index].time) {
+    while (midi_note_index < num_notes && midi_time >= note_messages[midi_note_index].time) {
         struct note_message note = note_messages[midi_note_index];
         if (note.on) {
             midi_notes[note.note-21] = 1;
@@ -42,7 +47,7 @@ void midi_sample_note(void) {
         }
         ++midi_note_index;
     }
-    if (midi_note_index < NUM_MIDI_NOTES) {
+    if (midi_note_index < num_notes) {
         speaker_play_notes();
     } else {
         PWM0_1_CMPA_R = 0;

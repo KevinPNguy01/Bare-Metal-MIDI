@@ -80,11 +80,22 @@ void poll_keypad_handler(void) {
             }
         }
     }
+
+    if ('0' <= pressed_key && pressed_key <= '9') {
+        uint8_t index = pressed_key - '0';
+        if (index < NUM_SONGS) {
+            current_song = &songs[index];
+            midi_init();
+        }
+    }
+
+    if (current_song == NULL) return;
+
     if (pressed_key == '*') {
         midi_init();
     }
     if (pressed_key == '#') {
-        midi_note_index = NUM_MIDI_NOTES;
+        midi_note_index = current_song->num_notes;
         PWM0_1_CMPA_R = 0;
     }
 }

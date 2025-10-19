@@ -10,6 +10,8 @@
 
 #include "tm4c123gh6pm.h"
 #include "midi.h"
+#include "songs.h"
+#include "song.h"
 #include <stdint.h>
 #include <stdbool.h>
 

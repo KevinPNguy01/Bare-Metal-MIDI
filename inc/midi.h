@@ -13,6 +13,7 @@
 #include "speaker.h"
 #include "lcd.h"
 #include "songs.h"
+#include "song.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
