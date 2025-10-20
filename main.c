@@ -46,6 +46,7 @@ int main(void)
     keypad_init();
     lcd_init();
     speaker_init();
+    midi_init_sine_and_phase_inc();
     midi_init();
 
     timer1_init();

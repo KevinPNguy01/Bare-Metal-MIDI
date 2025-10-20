@@ -35,6 +35,7 @@ extern float midi_notes_phases[NUM_NOTES];
 extern float midi_notes_phases_inc[NUM_NOTES];
 extern float midi_sine[NUM_SINE_SIMPLES];
 
+void midi_init_sine_and_phase_inc(void);
 void midi_init(void);
 
 void midi_sample_note(void);

@@ -15,6 +15,17 @@ float midi_notes_phases[NUM_NOTES] = {0};
 float midi_notes_phases_inc[NUM_NOTES] = {0};
 float midi_sine[NUM_SINE_SIMPLES] = {0};
 
+void midi_init_sine_and_phase_inc(void) {
+    uint16_t i;
+    for (i = 0; i < NUM_NOTES; ++i) {
+        midi_notes_phases_inc[i] = 440.0 * pow(2.0, (21 + i - 69) / 12.0) / 16000;
+    }
+
+    for (i = 0; i < NUM_SINE_SIMPLES; ++i) {
+        midi_sine[i] = sinf(2 * M_PI * i / NUM_SINE_SIMPLES);
+    }
+}
+
 void midi_init(void) {
     midi_note_index = 0;
     midi_time = 0;
@@ -23,11 +34,6 @@ void midi_init(void) {
     for (i = 0; i < NUM_NOTES; ++i) {
         midi_notes[i] = false;
         midi_notes_phases[i] = 0;
-        midi_notes_phases_inc[i] = 440.0 * pow(2.0, (21 + i - 69) / 12.0) / 16000;
-    }
-
-    for (i = 0; i < NUM_SINE_SIMPLES; ++i) {
-        midi_sine[i] = sinf(2 * M_PI * i / NUM_SINE_SIMPLES);
     }
 }
 
