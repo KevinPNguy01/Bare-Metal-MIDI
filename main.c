@@ -63,13 +63,12 @@ int main(void)
         if (current_song == NULL) continue;
 
         lcd_set_cursor_pos(0, 0);
-        uint32_t milliseconds = midi_time / 10 / 1000;
 
         uint8_t marquee_index = 0;
         if (marquee_len > 16) {
             uint32_t marquee_text_time = (marquee_len - 16) * marquee_delay_shift;
             uint32_t marquee_duration = marquee_delay_start + marquee_text_time + marquee_delay_end;
-            uint32_t marquee_time = milliseconds % marquee_duration;
+            uint32_t marquee_time = global_time % marquee_duration;
             if (marquee_delay_start <= marquee_time) {
                 if (marquee_text_time + marquee_delay_start <= marquee_time ) {
                     marquee_index = marquee_len - 16;
@@ -82,7 +81,7 @@ int main(void)
         lcd_write_str(&(marquee_text[marquee_index]));
 
 
-        uint16_t seconds = milliseconds / 1000;
+        uint16_t seconds = midi_time / 10 / 1000 / 1000;
         uint16_t minute = seconds / 60 % 10;
         uint16_t seconds_tens = seconds / 10 % 6;
         uint16_t seconds_ones = seconds % 10;

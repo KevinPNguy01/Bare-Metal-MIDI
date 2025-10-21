@@ -7,6 +7,8 @@
 
 #include "timers.h"
 
+uint32_t global_time;
+
 /**
  * Init Timer0A in one-shot mode for arbitrary delays
  * Init Timer0B in periodic mode for keypad polling
@@ -22,10 +24,10 @@ void timer0_init(void) {
     NVIC_EN0_R |= 1 << 19;          // Enable Timer0A IRQ in NVIC
     TIMER0_IMR_R |= 0x1;            // Enable timeout interrupt
 
-    // Timer 0B
+    // Timer 0B, 20ms periodic clock
     TIMER0_TBMR_R = 0x2;            // Periodic mode
-    TIMER0_TBPR_R = 18;             // Prescalar
-    TIMER0_TBILR_R = 63158;         // Initcount
+    TIMER0_TBPR_R = 24;             // Prescalar
+    TIMER0_TBILR_R = 64000;         // Initcount
     NVIC_EN0_R |= (1 << 20);        // Enable Timer0B IRQ in NVIC
     TIMER0_IMR_R |= (1 << 8);       // Enable timeout interrupt
     TIMER0_CTL_R |= (1 << 8);       // Start Timer0B
@@ -39,6 +41,8 @@ void timer0A_handler(void) {
 
 void timer0B_handler() {
     TIMER0_ICR_R |= (1 << 8);
+
+    global_time += 20;
 
     poll_keypad_handler();
 }

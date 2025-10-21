@@ -17,6 +17,8 @@
 
 extern volatile bool checkKeys;
 
+extern uint32_t global_time;
+
 void timer0_init(void);
 void timer0A_handler(void);
 void timer0B_handler(void);

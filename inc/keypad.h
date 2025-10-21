@@ -12,6 +12,7 @@
 #include "midi.h"
 #include "songs.h"
 #include "song.h"
+#include "timers.h"
 #include <stdint.h>
 #include <stdbool.h>
 

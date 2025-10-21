@@ -87,6 +87,7 @@ void poll_keypad_handler(void) {
         if (index < NUM_SONGS) {
             lcd_clear_screen();
             current_song = &songs[index];
+            global_time = 0;
             midi_init();
 
             uint8_t i;
