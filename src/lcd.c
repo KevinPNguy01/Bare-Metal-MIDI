@@ -7,6 +7,50 @@
 
 #include "lcd.h"
 
+uint8_t char_play[] = {
+    0b01000,
+    0b01100,
+    0b01110,
+    0b01111,
+    0b01110,
+    0b01100,
+    0b01000,
+    0b00000
+};
+
+uint8_t char_pause[] = {
+    0b11011,
+    0b11011,
+    0b11011,
+    0b11011,
+    0b11011,
+    0b11011,
+    0b11011,
+    0b00000
+};
+
+uint8_t char_next[] = {
+    0b00000,
+    0b10001,
+    0b11001,
+    0b11101,
+    0b11001,
+    0b10001,
+    0b00000,
+    0b00000
+};
+
+uint8_t char_prev[] = {
+    0b00000,
+    0b10001,
+    0b10011,
+    0b10111,
+    0b10011,
+    0b10001,
+    0b00000,
+    0b00000
+};
+
 void lcd_init() {
     SYSCTL_RCGCGPIO_R |= (3 << 2);  // Enable clock for Port C-D
 
@@ -32,6 +76,19 @@ void lcd_init() {
     lcd_clear_screen();
     lcd_write_instruction(0b00000110);
     lcd_write_instruction(0b00001111);
+
+    uint8_t i;
+    lcd_write_instruction(0x40);
+    for (i = 0; i < 8; ++i) lcd_write_data(char_play[i]);
+
+    lcd_write_instruction(0x40 + 8);
+    for (i = 0; i < 8; ++i) lcd_write_data(char_pause[i]);
+
+    lcd_write_instruction(0x40 + 16);
+    for (i = 0; i < 8; ++i) lcd_write_data(char_next[i]);
+
+    lcd_write_instruction(0x40 + 24);
+    for (i = 0; i < 8; ++i) lcd_write_data(char_prev[i]);
 }
 
 /**

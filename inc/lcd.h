@@ -13,6 +13,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+extern uint8_t char_play[8];
+extern uint8_t char_pause[8];
+extern uint8_t char_next[8];
+extern uint8_t char_prev[8];
+
 void lcd_init();
 void lcd_write_instruction(char data);
 void lcd_write_data(char data);

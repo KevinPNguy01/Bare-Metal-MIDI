@@ -93,8 +93,16 @@ int main(void)
             '0' + seconds_ones,
             '\0'
         };
-        lcd_set_cursor_pos(1, 1);
+        lcd_set_cursor_pos(0, 1);
         lcd_write_str(time_str);
+
+        // Display media controls
+        lcd_set_cursor_pos(5, 1);
+        lcd_write_data(3);
+        lcd_write_data(' ');
+        lcd_write_data(1);
+        lcd_write_data(' ');
+        lcd_write_data(2);
 
         seconds = current_song->note_messages[current_song->num_notes-1].time / 10 / 1000 / 1000;
         minute = seconds / 60 % 10;
@@ -107,7 +115,7 @@ int main(void)
             '0' + seconds_ones,
             '\0'
         };
-        lcd_set_cursor_pos(12, 1);
+        lcd_set_cursor_pos(11, 1);
         lcd_write_str(duration_str);
 
         delay_ms(50);
