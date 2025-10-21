@@ -75,7 +75,7 @@ void lcd_init() {
     lcd_write_instruction(0b00001000);
     lcd_clear_screen();
     lcd_write_instruction(0b00000110);
-    lcd_write_instruction(0b00001111);
+    lcd_write_instruction(0b00001100);
 
     uint8_t i;
     lcd_write_instruction(0x40);
