@@ -9,6 +9,7 @@
 
 uint16_t midi_note_index = 0;
 uint32_t midi_time = 0;         // 0.1 microsecond units
+uint8_t midi_instrument = 0;
 
 bool midi_notes[NUM_NOTES] = {false};
 float midi_notes_phases[NUM_NOTES] = {0};

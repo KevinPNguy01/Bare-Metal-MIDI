@@ -82,6 +82,10 @@ void poll_keypad_handler(void) {
         GPIO_PORTD_DATA_R &= ~(1 << y);
     }
 
+    if ('A' <= pressed_key && pressed_key <= 'D') {
+        midi_instrument = pressed_key - 'A';
+    }
+
     if ('1' <= pressed_key && pressed_key <= '9') {
         uint8_t index = pressed_key - '1';
         if (index < NUM_SONGS) {

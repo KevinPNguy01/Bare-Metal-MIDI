@@ -23,6 +23,7 @@
 
 extern uint16_t midi_note_index;
 extern uint32_t midi_time;
+extern uint8_t midi_instrument;
 
 struct note_message {
     uint32_t time;
