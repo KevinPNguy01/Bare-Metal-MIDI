@@ -19,7 +19,8 @@
 #include <math.h>
 
 #define NUM_NOTES 88
-#define NUM_SINE_SIMPLES 256
+#define NUM_SINE_SAMPLES 256
+#define NUM_TANH_SAMPLES 1024
 
 extern uint16_t midi_note_index;
 extern uint32_t midi_time;
@@ -34,9 +35,10 @@ struct note_message {
 extern bool midi_notes[NUM_NOTES];
 extern float midi_notes_phases[NUM_NOTES];
 extern float midi_notes_phases_inc[NUM_NOTES];
-extern float midi_sine[NUM_SINE_SIMPLES];
+extern float midi_sine[NUM_SINE_SAMPLES];
+extern float midi_tanh[NUM_TANH_SAMPLES];
 
-void midi_init_sine_and_phase_inc(void);
+void midi_init_trig(void);
 void midi_init(void);
 
 void midi_sample_note(void);

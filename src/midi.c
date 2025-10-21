@@ -14,16 +14,22 @@ uint8_t midi_instrument = 0;
 bool midi_notes[NUM_NOTES] = {false};
 float midi_notes_phases[NUM_NOTES] = {0};
 float midi_notes_phases_inc[NUM_NOTES] = {0};
-float midi_sine[NUM_SINE_SIMPLES] = {0};
+float midi_sine[NUM_SINE_SAMPLES] = {0};
+float midi_tanh[NUM_TANH_SAMPLES] = {0};
 
-void midi_init_sine_and_phase_inc(void) {
+
+void midi_init_trig(void) {
     uint16_t i;
     for (i = 0; i < NUM_NOTES; ++i) {
         midi_notes_phases_inc[i] = 440.0 * pow(2.0, (21 + i - 69) / 12.0) / 16000;
     }
 
-    for (i = 0; i < NUM_SINE_SIMPLES; ++i) {
-        midi_sine[i] = sinf(2 * M_PI * i / NUM_SINE_SIMPLES);
+    for (i = 0; i < NUM_SINE_SAMPLES; ++i) {
+        midi_sine[i] = sinf(2 * M_PI * i / NUM_SINE_SAMPLES);
+    }
+
+    for (i = 0; i < NUM_TANH_SAMPLES; ++i) {
+        midi_tanh[i] = tanh(M_PI * i / NUM_TANH_SAMPLES);
     }
 }
 
