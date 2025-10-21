@@ -4,7 +4,7 @@
 #include "midi.h"
 #include "song.h"
 
-#define NUM_SONGS 4
+#define NUM_SONGS 6
 
 
 #define SONG_0_NUM_NOTES 1750
@@ -17,15 +17,25 @@ extern const char song_1_title[];
 extern const char song_1_artist[];
 extern const struct note_message song_1_note_messages[SONG_1_NUM_NOTES];
 
-#define SONG_2_NUM_NOTES 2106
+#define SONG_2_NUM_NOTES 978
 extern const char song_2_title[];
 extern const char song_2_artist[];
 extern const struct note_message song_2_note_messages[SONG_2_NUM_NOTES];
 
-#define SONG_3_NUM_NOTES 4999
+#define SONG_3_NUM_NOTES 416
 extern const char song_3_title[];
 extern const char song_3_artist[];
 extern const struct note_message song_3_note_messages[SONG_3_NUM_NOTES];
+
+#define SONG_4_NUM_NOTES 4090
+extern const char song_4_title[];
+extern const char song_4_artist[];
+extern const struct note_message song_4_note_messages[SONG_4_NUM_NOTES];
+
+#define SONG_5_NUM_NOTES 3902
+extern const char song_5_title[];
+extern const char song_5_artist[];
+extern const struct note_message song_5_note_messages[SONG_5_NUM_NOTES];
 
 extern const struct Song songs[NUM_SONGS];
 

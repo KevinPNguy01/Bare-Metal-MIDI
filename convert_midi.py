@@ -17,14 +17,24 @@ songs = [
         "artist": "DJ Okawari",
     },
     {
-        "file": "midi/sos.mid",
-        "title": "SOS",
-        "artist": "Avicii",
+        "file": "midi/one_last_time.mid",
+        "title": "One Last Time",
+        "artist": "Ariana Grande",
+    },
+    {
+        "file": "midi/gravity_falls.mid",
+        "title": "Gravity Falls",
+        "artist": "Brad Breeck",
     },
     {
         "file": "midi/golden_hour.mid",
         "title": "Golden Hour",
         "artist": "JVKE",
+    },
+    {
+        "file": "midi/we_dont_talk_anymore.mid",
+        "title": "We Don't Talk Anymore",
+        "artist": "Charlie Puth ft. Selena Gomez",
     },
 ]
 
@@ -61,6 +71,8 @@ with open("inc/songs.h", "w") as h_file, open("src/songs.c", "w") as c_file:
                     )
                     time += microseconds
                     notes.append((msg.note, round(time), msg.type == "note_on"))
+                    if (msg.velocity == 0) and (msg.type == "note_on"):
+                        notes[-1] = (msg.note, round(time), False)
 
         num_notes = 4999
         notes = sorted(notes, key=lambda x: x[1])
