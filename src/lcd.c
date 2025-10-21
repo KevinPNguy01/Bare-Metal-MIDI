@@ -71,9 +71,9 @@ void lcd_set_cursor_pos(uint8_t x, uint8_t y) {
 
 }
 
-void lcd_write_str(const char str[]) {
+void lcd_write_str(const char* str) {
     uint8_t i;
-    for (i = 0; str[i] != '\0'; ++i) {
+    for (i = 0; str[i] != '\0' && i < 16; ++i) {
         lcd_write_data(str[i]);
     }
 }
