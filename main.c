@@ -99,7 +99,7 @@ int main(void)
         lcd_set_cursor_pos(5, 1);
         lcd_write_data(3);
         lcd_write_data(' ');
-        lcd_write_data(1);
+        lcd_write_data(is_playing ? 1 : 0);
         lcd_write_data(' ');
         lcd_write_data(2);
 

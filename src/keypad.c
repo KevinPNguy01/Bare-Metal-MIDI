@@ -82,12 +82,13 @@ void poll_keypad_handler(void) {
         GPIO_PORTD_DATA_R &= ~(1 << y);
     }
 
-    if ('0' <= pressed_key && pressed_key <= '9') {
-        uint8_t index = pressed_key - '0';
+    if ('1' <= pressed_key && pressed_key <= '9') {
+        uint8_t index = pressed_key - '1';
         if (index < NUM_SONGS) {
-            lcd_clear_screen();
             current_song = &songs[index];
             global_time = 0;
+            is_playing = true;
+            lcd_clear_screen();
             midi_init();
 
             uint8_t i;
@@ -115,10 +116,16 @@ void poll_keypad_handler(void) {
     if (current_song == NULL) return;
 
     if (pressed_key == '*') {
-        midi_init();
+        if (midi_time < 2500 * 1000 * 10) {
+            prev_song();
+        } else {
+            midi_init();
+        }
     }
-    if (pressed_key == '#') {
-        midi_note_index = current_song->num_notes;
-        PWM0_1_CMPA_R = 0;
+    else if (pressed_key == '0') {
+        is_playing = !is_playing;
+    }
+    else if (pressed_key == '#') {
+        next_song();
     }
 }

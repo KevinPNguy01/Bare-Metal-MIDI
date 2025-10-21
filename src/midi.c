@@ -38,7 +38,7 @@ void midi_init(void) {
 }
 
 void midi_sample_note(void) {
-    if (current_song == NULL || midi_note_index >= current_song->num_notes) return;
+    if (!is_playing) return;
 
     uint16_t num_notes = current_song->num_notes;
     const struct note_message* note_messages = current_song->note_messages;
@@ -57,5 +57,6 @@ void midi_sample_note(void) {
         speaker_play_notes();
     } else {
         PWM0_1_CMPA_R = 0;
+        is_playing = false;
     }
 }

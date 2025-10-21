@@ -9,6 +9,7 @@
 #define INC_SONG_H_
 
 #include "midi.h"
+#include "timers.h"
 #include <stdlib.h>
 #include <stddef.h>
 
@@ -19,10 +20,13 @@ struct Song {
     const char* artist;
 };
 
-
 extern char marquee_text[256];
 extern uint8_t marquee_len;
 
 extern const struct Song* current_song;
+extern bool is_playing;
+
+extern void prev_song(void);
+extern void next_song(void);
 
 #endif /* INC_SONG_H_ */
