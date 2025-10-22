@@ -46,12 +46,12 @@ void keypad_init(void) {
     GPIO_PORTD_DEN_R |= 0x0F;       // Digital enable for pins 0-3
 
     GPIO_PORTE_DIR_R &= ~0x0E;      // Input for pins 1-3
-    GPIO_PORTE_DEN_R = 0x0E;        // Digital enable for pins 1-3
-    GPIO_PORTE_PDR_R = 0x0E;        // Enable PDR for pins 1-3
+    GPIO_PORTE_DEN_R |= 0x0E;       // Digital enable for pins 1-3
+    GPIO_PORTE_PDR_R |= 0x0E;       // Enable PDR for pins 1-3
 
     GPIO_PORTF_DIR_R &= ~0x02;      // Input for pin 1
-    GPIO_PORTF_DEN_R = 0x02;        // Digital enable for pin 1
-    GPIO_PORTF_PDR_R = 0x02;        // Enable PDR for pin 1
+    GPIO_PORTF_DEN_R |= 0x02;       // Digital enable for pin 1
+    GPIO_PORTF_PDR_R |= 0x02;       // Enable PDR for pin 1
 }
 
 /**
@@ -84,6 +84,8 @@ void poll_keypad_handler(void) {
 
     if ('A' <= pressed_key && pressed_key <= 'D') {
         midi_instrument = pressed_key - 'A';
+        leds_turn_all_off();
+        leds_turn_on_one(midi_instrument);
     }
 
     if ('1' <= pressed_key && pressed_key <= '9') {

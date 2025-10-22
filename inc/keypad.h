@@ -13,6 +13,7 @@
 #include "songs.h"
 #include "song.h"
 #include "timers.h"
+#include "leds.h"
 #include <stdint.h>
 #include <stdbool.h>
 

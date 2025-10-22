@@ -5,6 +5,7 @@
 #include "lcd.h"
 #include "midi.h"
 #include "song.h"
+#include "leds.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -46,6 +47,8 @@ int main(void)
 
     timer0_init();
 
+    leds_init();
+    leds_turn_on_one(0);
     keypad_init();
     lcd_init();
     speaker_init();
