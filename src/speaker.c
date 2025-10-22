@@ -42,7 +42,7 @@ void speaker_play_notes() {
         if (midi_notes_phases[i] >= 1.0f) midi_notes_phases[i] -= 1.0f;
 
         float phase = midi_notes_phases[i];
-        uint16_t sine_index = phase * NUM_SINE_SIMPLES;
+        uint16_t sine_index = phase * NUM_SINE_SAMPLES;
         float amplitude;
         switch (midi_instrument) {
         case 0:
@@ -61,13 +61,8 @@ void speaker_play_notes() {
         mixed += amplitude;
         ++num_notes_on;
     }
-    if (num_notes_on == 0) {
-        PWM0_1_CMPA_R = 0;
-        return;
-    }
 
-    mixed /= num_notes_on;
-    mixed = (mixed + 1) * 0.5f;
+    mixed = midi_tanh[((uint16_t) ((mixed + num_notes_on) * 64))];
 
     PWM0_1_CMPA_R = (uint32_t)(mixed * PWM0_1_LOAD_R - 1);
 }
