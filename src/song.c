@@ -15,11 +15,11 @@ const struct Song* current_song = NULL;
 bool is_playing = false;
 
 void prev_song(void) {
+    lcd_clear_screen();
+    midi_init();
     current_song_index = current_song_index == 0 ? NUM_SONGS - 1 : current_song_index - 1;
     current_song = &songs[current_song_index];
     global_time = 0;
-    lcd_clear_screen();
-    midi_init();
 
     uint8_t i;
     for (i = 0; current_song->title[i] != '\0'; ++i);
@@ -43,11 +43,11 @@ void prev_song(void) {
 }
 
 void next_song(void) {
+    lcd_clear_screen();
+    midi_init();
     current_song_index = current_song_index == NUM_SONGS - 1 ? 0 : current_song_index + 1;
     current_song = &songs[current_song_index];
     global_time = 0;
-    lcd_clear_screen();
-    midi_init();
 
     uint8_t i;
     for (i = 0; current_song->title[i] != '\0'; ++i);

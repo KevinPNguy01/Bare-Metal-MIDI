@@ -89,11 +89,11 @@ void poll_keypad_handler(void) {
     if ('1' <= pressed_key && pressed_key <= '9') {
         uint8_t index = pressed_key - '1';
         if (index < NUM_SONGS) {
+            lcd_clear_screen();
+            midi_init();
             current_song = &songs[index];
             global_time = 0;
             is_playing = true;
-            lcd_clear_screen();
-            midi_init();
 
             uint8_t i;
             for (i = 0; current_song->title[i] != '\0'; ++i);
