@@ -57,6 +57,11 @@ int main(void)
 
     timer1_init();
 
+    lcd_set_cursor_pos(0, 0);
+    lcd_write_str("Bare Metal MIDI");
+    lcd_set_cursor_pos(0, 1);
+    lcd_write_str("by Kevin Nguy");
+
 
     uint32_t marquee_delay_start = 3000;
     uint32_t marquee_delay_end = 3000;
