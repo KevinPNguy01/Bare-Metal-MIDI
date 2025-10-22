@@ -12,6 +12,11 @@ songs = [
         "artist": "Weathering with You",
     },
     {
+        "file": "midi/one_summers_day.mid",
+        "title": "One Summer's Day",
+        "artist": "Spirited Away",
+    },
+    {
         "file": "midi/flower_dance.mid",
         "title": "Flower Dance",
         "artist": "DJ Okawari",
@@ -22,9 +27,9 @@ songs = [
         "artist": "Ariana Grande",
     },
     {
-        "file": "midi/gravity_falls.mid",
-        "title": "Gravity Falls",
-        "artist": "Brad Breeck",
+        "file": "midi/we_dont_talk_anymore.mid",
+        "title": "We Don't Talk Anymore",
+        "artist": "Charlie Puth ft. Selena Gomez",
     },
     {
         "file": "midi/golden_hour.mid",
@@ -32,9 +37,19 @@ songs = [
         "artist": "JVKE",
     },
     {
-        "file": "midi/we_dont_talk_anymore.mid",
-        "title": "We Don't Talk Anymore",
-        "artist": "Charlie Puth ft. Selena Gomez",
+        "file": "midi/tetris.mid",
+        "title": "Tetris Theme",
+        "artist": "Hirokazu Tanaka",
+    },
+    {
+        "file": "midi/spider_dance.mid",
+        "title": "Spider Dance",
+        "artist": "Toby Fox",
+    },
+    {
+        "file": "midi/gravity_falls.mid",
+        "title": "Gravity Falls",
+        "artist": "Brad Breeck",
     },
 ]
 
