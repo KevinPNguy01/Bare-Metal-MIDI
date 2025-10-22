@@ -45,17 +45,21 @@ void speaker_play_notes() {
         uint16_t sine_index = phase * NUM_SINE_SAMPLES;
         float amplitude;
         switch (midi_instrument) {
+        // Sine wave
         case 0:
             amplitude = midi_sine[sine_index];
             break;
+        // Triangle wave
         case 1:
-            amplitude = phase < 0.5f ? 1 : 0;
+            amplitude = 4 * fabsf(phase - 0.5f) - 1;
             break;
+        // Sawtooth wave
         case 2:
             amplitude = phase;
             break;
+        // Square wave
         case 3:
-            amplitude = 4 * fabsf(phase - 0.5f) - 1;
+            amplitude = phase < 0.5f ? 1 : 0;
             break;
         }
         mixed += amplitude;
